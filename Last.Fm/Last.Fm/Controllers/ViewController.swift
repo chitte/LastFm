@@ -1,14 +1,8 @@
-//
-//  ViewController.swift
-//  Last.Fm
-//
-//  Created by Onyx on 14/03/19.
-//  Copyright © 2019 Wipro. All rights reserved.
-//
+
 
 import UIKit
 
-class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UISearchBarDelegate {
+class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UISearchBarDelegate, DataCompletionDelegate {
 
     @IBOutlet var collectionSearchBar: UISearchBar!
     @IBOutlet var collectionView: UICollectionView!
@@ -19,45 +13,55 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         return collectionView.frame.width / 2
     }
 
+    var albumViewModel = AlbumViewModel()
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        navigationController?.setNavigationBarHidden(false, animated: true)
         collectionSearchBar.delegate = self
         collectionView.dataSource = self
         collectionView.delegate = self
+        albumViewModel.delegate = self
+
+        // Get Album Data
+        albumViewModel.fetchAlbumData()
     }
 
-
-    // MARK: Search
-
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    func albumsDataFetched() {
+        print("albumsDataFetched")
         self.collectionView.reloadData()
     }
 
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        self.view.endEditing(true)
+    // MARK: Search
+
+    func searchBar(_: UISearchBar, textDidChange _: String) {
+        collectionView.reloadData()
     }
 
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        self.collectionSearchBar.setShowsCancelButton(true, animated: true)
+    func searchBarSearchButtonClicked(_: UISearchBar) {
+        view.endEditing(true)
     }
 
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        self.collectionSearchBar.setShowsCancelButton(false, animated: true)
+    func searchBarTextDidBeginEditing(_: UISearchBar) {
+        collectionSearchBar.setShowsCancelButton(true, animated: true)
     }
 
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        self.collectionSearchBar.resignFirstResponder()
-        self.collectionSearchBar.text = ""
+    func searchBarTextDidEndEditing(_: UISearchBar) {
+        collectionSearchBar.setShowsCancelButton(false, animated: true)
+    }
+
+    func searchBarCancelButtonClicked(_: UISearchBar) {
+        collectionSearchBar.resignFirstResponder()
+        collectionSearchBar.text = ""
     }
 
     // MARK: CollectionView
 
-    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    func numberOfSectionsInCollectionView(collectionView _: UICollectionView) -> Int {
         return 1
     }
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
         return 4
     }
 
@@ -72,7 +76,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         cell.artistName.textColor = UIColor.white
         cell.artistName.numberOfLines = 2
         cell.artistName.font = UIFont.boldSystemFont(ofSize: 16.0)
-        cell.transImageView.backgroundColor = UIColor.init(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.25)
+        cell.transImageView.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.25)
 
         cell.albumName.text = "Album Name"
         cell.artistName.text = "Artist Name"
@@ -80,8 +84,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
 
     // MARK: <UICollectionViewDelegateFlowLayout>
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt _: IndexPath) -> CGSize {
         let flowLayout = collectionViewLayout as! UICollectionViewFlowLayout
         let totalSpace = flowLayout.sectionInset.left
             + flowLayout.sectionInset.right
@@ -93,7 +97,4 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     func CGRectMake(_ x: CGFloat, _ y: CGFloat, _ width: CGFloat, _ height: CGFloat) -> CGRect {
         return CGRect(x: x, y: y, width: width, height: height)
     }
-
-
 }
-
