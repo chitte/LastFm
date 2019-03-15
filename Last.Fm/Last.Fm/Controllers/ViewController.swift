@@ -62,7 +62,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
 
     func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
-        return 4
+        return albumViewModel.getAlbumCount()
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -78,9 +78,28 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         cell.artistName.font = UIFont.boldSystemFont(ofSize: 16.0)
         cell.transImageView.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.25)
 
-        cell.albumName.text = "Album Name"
-        cell.artistName.text = "Artist Name"
+        cell.albumName.text = albumViewModel.fetchAlbumName(index: indexPath.row)
+        cell.artistName.text = albumViewModel.fetchArtistNmae(index: indexPath.row)
+
+        let albumImage = albumViewModel.fetchAlbumImageWith(index: indexPath.row, size: ImageSize.extralarge)
+        if let url = URL(string: albumImage!) {
+            getData(from: url) { data, response, error in
+                guard let data = data, error == nil else { return }
+                print(response?.suggestedFilename ?? url.lastPathComponent)
+                print("Download Finished")
+                DispatchQueue.main.async() {
+                    cell.albumImageView.image = UIImage(data: data)
+                }
+            }
+        } else {
+            print("URL IS NIL")
+        }
+
         return cell
+    }
+
+    func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
+        URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
     }
 
     // MARK: <UICollectionViewDelegateFlowLayout>
