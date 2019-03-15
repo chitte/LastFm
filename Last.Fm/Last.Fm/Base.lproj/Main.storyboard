@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Last.Fm-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Last_Fm" customModuleProvider="target" sceneMemberID="viewController">
@@ -115,7 +115,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <navigationItem key="navigationItem" id="kuR-2Q-BB8"/>
+                    <navigationItem key="navigationItem" title="Last.Fm" id="kuR-2Q-BB8"/>
                     <connections>
                         <outlet property="collectionSearchBar" destination="VWa-bx-U8h" id="Z20-cG-zAU"/>
                         <outlet property="collectionView" destination="sYG-Y8-ofS" id="CO8-tq-mTo"/>

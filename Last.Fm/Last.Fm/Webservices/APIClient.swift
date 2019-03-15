@@ -16,7 +16,7 @@ class Webservice {
     private let albumsURL = URL(string: "\(BASE_URL)?method=album.search&album=believe&api_key=\(API_KEY)&format=json")!
 
     public func getAlbumsData(completion: @escaping (Albums) -> Void) {
-        URLSession.shared.dataTask(with: albumsURL) {data,_,_ in
+        URLSession.shared.dataTask(with: albumsURL) {data, error,_ in
             if let data = data {
                 let decoder = JSONDecoder()
                 do {
@@ -26,9 +26,14 @@ class Webservice {
                     }
                 } catch {
                     print("error trying to convert data to JSON")
-                    print(error)
+                    print("JSON ERROR = \(error.localizedDescription)")
                 }
             }
+
+            if(error != nil) {
+                print("API ERROR = \(String(describing: error?.description))")
+            }
+
         }.resume()
     }
 

@@ -14,6 +14,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
 
     var albumViewModel = AlbumViewModel()
+    var cache: NSCache<AnyObject, AnyObject>!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +23,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         collectionView.dataSource = self
         collectionView.delegate = self
         albumViewModel.delegate = self
+
+        self.cache = NSCache()
 
         // Get Album Data
         albumViewModel.fetchAlbumData()
@@ -34,7 +37,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 
     // MARK: Search
 
-    func searchBar(_: UISearchBar, textDidChange _: String) {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if(searchText.count > 0) {
+            albumViewModel.filterAlbums(searchString: searchText)
+        }
         collectionView.reloadData()
     }
 
@@ -51,8 +57,11 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
 
     func searchBarCancelButtonClicked(_: UISearchBar) {
+        albumViewModel.filterAlbums(searchString: "")
+
         collectionSearchBar.resignFirstResponder()
         collectionSearchBar.text = ""
+        collectionView.reloadData()
     }
 
     // MARK: CollectionView
@@ -78,27 +87,37 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         cell.artistName.font = UIFont.boldSystemFont(ofSize: 16.0)
         cell.transImageView.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.25)
 
-        cell.albumName.text = albumViewModel.fetchAlbumName(index: indexPath.row)
-        cell.artistName.text = albumViewModel.fetchArtistNmae(index: indexPath.row)
+        cell.albumName.text = albumViewModel.fetchAlbumName(in: indexPath.row)
+        cell.artistName.text = albumViewModel.fetchArtistNmae(in: indexPath.row)
 
-        let albumImage = albumViewModel.fetchAlbumImageWith(index: indexPath.row, size: ImageSize.extralarge)
-        if let url = URL(string: albumImage!) {
-            getData(from: url) { data, response, error in
-                guard let data = data, error == nil else { return }
-                print(response?.suggestedFilename ?? url.lastPathComponent)
-                print("Download Finished")
-                DispatchQueue.main.async() {
-                    cell.albumImageView.image = UIImage(data: data)
+        if (self.cache.object(forKey: (indexPath as NSIndexPath).row as AnyObject) != nil){
+            print("Cached image used, no need to download it")
+            cell.albumImageView.image = self.cache.object(forKey: (indexPath as NSIndexPath).row as AnyObject) as? UIImage
+        } else {
+            let albumImage = albumViewModel.fetchAlbumImageWith(in: indexPath.row, size: ImageSize.extralarge)
+            if let url = URL(string: albumImage!) {
+                getImageData(from: url) { data, response, error in
+                    guard let data = data, error == nil else { return }
+                    // print(response?.suggestedFilename ?? url.lastPathComponent)
+                    // print("Download Finished")
+                    DispatchQueue.main.async() {
+                        let img = UIImage(data: data)
+                        cell.albumImageView.image = img
+                        self.cache.setObject(img!, forKey: (indexPath as NSIndexPath).row as AnyObject)
+                    }
+                }
+            } else {
+                print("URL IS NIL")
+                if let img = UIImage(data: Data()) {
+                    self.cache?.setObject(img, forKey: (indexPath as NSIndexPath).row as AnyObject)
                 }
             }
-        } else {
-            print("URL IS NIL")
         }
 
         return cell
     }
 
-    func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
+    func getImageData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
         URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
     }
 

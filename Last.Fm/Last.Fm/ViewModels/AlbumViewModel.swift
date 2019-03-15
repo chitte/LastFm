@@ -16,39 +16,41 @@ enum ImageSize: String {
 class AlbumViewModel {
     private var webService = Webservice()
     private var albums: Albums?
+    private var filteredAlbums: Albums?
 
     var delegate: DataCompletionDelegate?
 
     func fetchAlbumData() {
         webService.getAlbumsData { (data) in
             self.albums = data
+            self.filteredAlbums = self.albums
             self.delegate?.albumsDataFetched()
         }
     }
 
     func getAlbumCount() -> Int {
-        guard let count = self.albums?.results.albummatches.album.count else {
+        guard let count = self.filteredAlbums?.results.albummatches.album.count else {
             return 0
         }
         return count
     }
 
-    func fetchAlbumName(index: Int) -> String {
-        guard let artist = self.albums?.results.albummatches.album[index].name else {
+    func fetchAlbumName(in index: Int) -> String {
+        guard let artist = self.filteredAlbums?.results.albummatches.album[index].name else {
             return ""
         }
         return artist
     }
 
-    func fetchArtistNmae(index: Int) -> String {
-        guard let albumName = self.albums?.results.albummatches.album[index].artist else {
+    func fetchArtistNmae(in index: Int) -> String {
+        guard let albumName = self.filteredAlbums?.results.albummatches.album[index].artist else {
             return ""
         }
         return albumName
     }
 
-    func fetchAlbumImageWith(index: Int, size: ImageSize) -> String? {
-        guard let imagesArray = self.albums?.results.albummatches.album[index].image else {
+    func fetchAlbumImageWith(in index: Int, size: ImageSize) -> String? {
+        guard let imagesArray = self.filteredAlbums?.results.albummatches.album[index].image else {
             return nil
         }
 
@@ -59,6 +61,17 @@ class AlbumViewModel {
             }
         }
         return imageUrl
+    }
+
+    func filterAlbums(searchString: String) {
+        filteredAlbums = albums
+        if(searchString != "") {
+            if let albumsMatched = albums?.results.albummatches.album.filter({
+                $0.name.contains(searchString) ||
+                    $0.artist.contains(searchString) }) {
+                filteredAlbums?.results.albummatches.album = albumsMatched
+            }
+        }
     }
 
 }
