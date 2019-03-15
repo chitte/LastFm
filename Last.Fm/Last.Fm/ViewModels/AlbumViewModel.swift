@@ -7,10 +7,10 @@ protocol DataCompletionDelegate {
 }
 
 enum ImageSize: String {
-    case small = "small"
-    case medium = "medium"
-    case large = "large"
-    case extralarge = "extralarge"
+    case small
+    case medium
+    case large
+    case extralarge
 }
 
 class AlbumViewModel {
@@ -22,7 +22,7 @@ class AlbumViewModel {
     var errDelegate: ErrorDelegate?
 
     func fetchAlbumData() {
-        webService.getAlbumsData { data, error  in
+        webService.getAlbumsData { data, error in
             if error != nil {
                 self.errDelegate?.sendErrorInfoToUI(errMsg: (error?.localizedDescription)!)
             } else {
@@ -72,7 +72,7 @@ class AlbumViewModel {
 
     func filterAlbums(searchString: String) {
         filteredAlbums = albums
-        if(searchString != "") {
+        if searchString != "" {
             if let albumsMatched = albums?.results.albummatches.album.filter({
                 $0.name.contains(searchString) ||
                     $0.artist.contains(searchString) }) {
@@ -80,5 +80,4 @@ class AlbumViewModel {
             }
         }
     }
-
 }

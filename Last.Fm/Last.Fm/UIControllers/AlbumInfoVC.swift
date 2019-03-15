@@ -20,7 +20,7 @@ class AlbumInfoVC: UIViewController, InfoFetchDelegate, UITableViewDelegate, UIT
     var albumInfoViewModel = AlbumInfoViewModel()
 
     // MARK: ViewDidLoad
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         albumInfoViewModel.dataDelegate = self
@@ -30,7 +30,6 @@ class AlbumInfoVC: UIViewController, InfoFetchDelegate, UITableViewDelegate, UIT
         infoTableView.dataSource = self
         infoTableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         infoTableView.tableFooterView = UIView(frame: .zero)
-
 
         wikiView.frame = CGRect(x: 15, y: 100, width: screenWidth - 30, height: screenHeight - 130)
         wikiView.backgroundColor = UIColor.lightText
@@ -48,7 +47,7 @@ class AlbumInfoVC: UIViewController, InfoFetchDelegate, UITableViewDelegate, UIT
     }
 
     // MARK: Error Display
-    
+
     func sendErrorInfoToUI(errMsg: String) {
         print("Error Received")
         DispatchQueue.main.async {
@@ -73,9 +72,9 @@ class AlbumInfoVC: UIViewController, InfoFetchDelegate, UITableViewDelegate, UIT
 
         let albumImageStr = albumInfoViewModel.getAlbumInfoImageWith(size: ImageSize.large)
         if let url = URL(string: albumImageStr!) {
-            getImageData(from: url) { data, response, error in
+            getImageData(from: url) { data, _, error in
                 guard let data = data, error == nil else { return }
-                DispatchQueue.main.async() {
+                DispatchQueue.main.async {
                     let img = UIImage(data: data)
                     self.albumImage.image = img
                 }
@@ -88,7 +87,7 @@ class AlbumInfoVC: UIViewController, InfoFetchDelegate, UITableViewDelegate, UIT
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         let trackInfoDetail = albumInfoViewModel.getAlbumTrackDetails(at: indexPath.row)
-        if let trackName =  trackInfoDetail?.name, let trackDuration = trackInfoDetail?.duration {
+        if let trackName = trackInfoDetail?.name, let trackDuration = trackInfoDetail?.duration {
             cell.textLabel?.text = "\(indexPath.row + 1). \(trackName) Duration: \(trackDuration)"
         } else {
             cell.textLabel?.text = "No Track Info Found"
@@ -102,15 +101,14 @@ class AlbumInfoVC: UIViewController, InfoFetchDelegate, UITableViewDelegate, UIT
 
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-
     }
 
     public func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         return albumInfoViewModel.getTracksCount()
     }
 
-    @IBAction func wikiInfoAction(_ sender: Any) {
-        self.navigationController?.navigationBar.isUserInteractionEnabled = false
+    @IBAction func wikiInfoAction(_: Any) {
+        navigationController?.navigationBar.isUserInteractionEnabled = false
         wikiView.isHidden = false
         wikiInfoBtn.isUserInteractionEnabled = false
 
@@ -119,7 +117,7 @@ class AlbumInfoVC: UIViewController, InfoFetchDelegate, UITableViewDelegate, UIT
         textView.removeFromSuperview()
         textView.frame = CGRect(x: 0, y: 0, width: wikiView.frame.width, height: wikiView.frame.height)
         textView.textAlignment = NSTextAlignment.justified
-        if let publishedText =  wikiInfo?.published,
+        if let publishedText = wikiInfo?.published,
             let summaryText = wikiInfo?.summary,
             let content = wikiInfo?.content {
             textView.text = "\nPublished: \(publishedText) \n\nSummary: \(summaryText) \n\nContent: \(content) \n"
@@ -144,13 +142,13 @@ class AlbumInfoVC: UIViewController, InfoFetchDelegate, UITableViewDelegate, UIT
         closeButton.setTitle("x", for: UIControl.State.normal)
         closeButton.setTitleColor(UIColor.white, for: UIControl.State.normal)
         closeButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: IS_IPAD ? 40 : 30)
-        closeButton.addTarget(self, action:#selector(self.buttonClicked), for: .touchUpInside)
+        closeButton.addTarget(self, action: #selector(buttonClicked), for: .touchUpInside)
         wikiView.addSubview(closeButton)
     }
 
     @objc func buttonClicked() {
         print("Button Clicked")
-        self.navigationController?.navigationBar.isUserInteractionEnabled = true
+        navigationController?.navigationBar.isUserInteractionEnabled = true
         wikiView.isHidden = true
         wikiInfoBtn.isUserInteractionEnabled = true
     }

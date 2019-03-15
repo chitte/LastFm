@@ -3,7 +3,6 @@
 import UIKit
 
 class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UISearchBarDelegate, DataCompletionDelegate, ErrorDelegate {
-
     @IBOutlet var collectionSearchBar: UISearchBar!
     @IBOutlet var collectionView: UICollectionView!
 
@@ -31,13 +30,13 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 
         collectionView.addSubview(refreshControl)
 
-        self.cache = NSCache()
+        cache = NSCache()
 
         // Get Album Data
         showAnimation(rootVC: self, shouldStartAnimation: true)
         albumViewModel.fetchAlbumData()
 
-        self.refreshControl.addTarget(self, action: #selector(refreshCollectionView), for: .valueChanged)
+        refreshControl.addTarget(self, action: #selector(refreshCollectionView), for: .valueChanged)
     }
 
     @objc func refreshCollectionView() {
@@ -49,8 +48,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     func albumsDataFetched() {
         print("albumsDataFetched")
         showAnimation(rootVC: self, shouldStartAnimation: false)
-        self.refreshControl.endRefreshing()
-        self.collectionView.reloadData()
+        refreshControl.endRefreshing()
+        collectionView.reloadData()
     }
 
     // MARK: Error Display
@@ -65,8 +64,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 
     // MARK: Search Delegate Methods
 
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if(searchText.count > 0) {
+    func searchBar(_: UISearchBar, textDidChange searchText: String) {
+        if searchText.count > 0 {
             albumViewModel.filterAlbums(searchString: searchText)
         } else {
             albumViewModel.filterAlbums(searchString: "")
@@ -120,17 +119,17 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         cell.albumName.text = albumViewModel.fetchAlbumName(at: indexPath.row)
         cell.artistName.text = albumViewModel.fetchArtistNmae(at: indexPath.row)
 
-        if (self.cache.object(forKey: (indexPath as NSIndexPath).row as AnyObject) != nil){
+        if cache.object(forKey: (indexPath as NSIndexPath).row as AnyObject) != nil {
             print("Cached image used, no need to download it")
-            cell.albumImageView.image = self.cache.object(forKey: (indexPath as NSIndexPath).row as AnyObject) as? UIImage
+            cell.albumImageView.image = cache.object(forKey: (indexPath as NSIndexPath).row as AnyObject) as? UIImage
         } else {
             let albumImage = albumViewModel.fetchAlbumImageWith(at: indexPath.row, size: ImageSize.extralarge)
             if let url = URL(string: albumImage!) {
-                getImageData(from: url) { data, response, error in
+                getImageData(from: url) { data, _, error in
                     guard let data = data, error == nil else { return }
                     // print(response?.suggestedFilename ?? url.lastPathComponent)
                     // print("Download Finished")
-                    DispatchQueue.main.async() {
+                    DispatchQueue.main.async {
                         let img = UIImage(data: data)
                         cell.albumImageView.image = img
                         self.cache.setObject(img!, forKey: (indexPath as NSIndexPath).row as AnyObject)
@@ -139,7 +138,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             } else {
                 print("URL IS NIL")
                 if let img = UIImage(data: Data()) {
-                    self.cache?.setObject(img, forKey: (indexPath as NSIndexPath).row as AnyObject)
+                    cache?.setObject(img, forKey: (indexPath as NSIndexPath).row as AnyObject)
                 }
             }
         }
@@ -147,7 +146,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         return cell
     }
 
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let album = albumViewModel.fetchAlbumName(at: indexPath.row)
         let artist = albumViewModel.fetchArtistNmae(at: indexPath.row)
 
@@ -156,7 +155,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         let infoController = storyboard.instantiateViewController(withIdentifier: "AlbumInfoVC") as! AlbumInfoVC
         infoController.album = album
         infoController.artist = artist
-        self.navigationController?.pushViewController(infoController, animated: true)
+        navigationController?.pushViewController(infoController, animated: true)
     }
 
     // MARK: <UICollectionViewDelegateFlowLayout>

@@ -1,7 +1,7 @@
 
 import Foundation
 
-//{"error":6,"message":"Album not found","links":[]}
+// {"error":6,"message":"Album not found","links":[]}
 
 struct ErrorType: Codable {
     var error: String?

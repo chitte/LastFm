@@ -7,7 +7,6 @@ protocol InfoFetchDelegate {
 }
 
 class AlbumInfoViewModel {
-
     private var webService = Webservice()
     private var albumInfoDetails: AlbumDetails?
 
@@ -15,7 +14,7 @@ class AlbumInfoViewModel {
     var errDelegate: ErrorDelegate?
 
     func fetchAlbumInformation(artist: String, album: String) {
-        webService.getAlbumsInformation(artist: artist, album: album) { data, error  in
+        webService.getAlbumsInformation(artist: artist, album: album) { data, error in
             if error != nil {
                 self.errDelegate?.sendErrorInfoToUI(errMsg: (error?.localizedDescription)!)
             } else {
@@ -88,5 +87,4 @@ class AlbumInfoViewModel {
         }
         return wikiInfo
     }
-
 }

@@ -8,11 +8,11 @@ class Webservice {
         // ALBUM SEARCH API
         let albumsURL = URL(string: "\(BASE_URL)?method=album.search&album=believe&api_key=\(API_KEY)&format=json")!
         print("albumsSearchURL = \(albumsURL)")
-        URLSession.shared.dataTask(with: albumsURL) {data, response, error in
+        URLSession.shared.dataTask(with: albumsURL) { data, response, error in
             if let httpResponse = response as? HTTPURLResponse {
                 print("SEARCH STATUS CODE = \(httpResponse.statusCode)")
                 self.statusCode = httpResponse.statusCode
-                if(self.statusCode == 200) {
+                if self.statusCode == 200 {
                     if let data = data {
                         let decoder = JSONDecoder()
                         do {
@@ -31,7 +31,7 @@ class Webservice {
                 }
             }
 
-            if(error != nil) {
+            if error != nil {
                 print("SEARCH API ERROR = \(String(describing: error?.localizedDescription))")
                 completion(nil, error)
             }
@@ -47,11 +47,11 @@ class Webservice {
         print("resultInfoURL = \(resultInfoURL!)")
 
         let albumsInfoURL = URL(string: resultInfoURL!)
-        URLSession.shared.dataTask(with: albumsInfoURL!) {data, response, error in
+        URLSession.shared.dataTask(with: albumsInfoURL!) { data, response, error in
             if let httpResponse = response as? HTTPURLResponse {
                 self.statusCode = httpResponse.statusCode
                 print("INFO STATUS CODE = \(self.statusCode)")
-                if(self.statusCode == 200) {
+                if self.statusCode == 200 {
                     if let data = data {
                         let decoder = JSONDecoder()
                         do {
@@ -70,7 +70,7 @@ class Webservice {
                 }
             }
 
-            if(error != nil) {
+            if error != nil {
                 print("INFO API ERROR = \(String(describing: error?.localizedDescription))")
                 completion(nil, error)
             }
@@ -116,7 +116,4 @@ class Webservice {
         }
         print("STATUS CODE ERROR = \(errMsg)")
     }
-
 }
-
-
