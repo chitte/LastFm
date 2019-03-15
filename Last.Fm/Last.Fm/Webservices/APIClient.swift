@@ -4,7 +4,7 @@ import Foundation
 class Webservice {
     var statusCode: Int = 0
 
-    public func getAlbumsData(completion: @escaping (Albums) -> Void) {
+    public func getAlbumsData(completion: @escaping (Albums?, Error?) -> Void) {
         // ALBUM SEARCH API
         let albumsURL = URL(string: "\(BASE_URL)?method=album.search&album=believe&api_key=\(API_KEY)&format=json")!
         print("albumsSearchURL = \(albumsURL)")
@@ -18,26 +18,28 @@ class Webservice {
                         do {
                             let jsonData = try decoder.decode(Albums.self, from: data)
                             DispatchQueue.main.async {
-                                completion(jsonData)
+                                completion(jsonData, nil)
                             }
                         } catch {
                             print("error trying to convert data to JSON")
                             print("SEARCH JSON ERROR = \(error.localizedDescription)")
+                            completion(nil, error)
                         }
                     }
                 } else {
-                    self.printErrorMessage(statusCode: self.statusCode)
+                    completion(nil, self.printErrorMessage(statusCode: self.statusCode) as? Error)
                 }
             }
 
             if(error != nil) {
                 print("SEARCH API ERROR = \(String(describing: error?.localizedDescription))")
+                completion(nil, error)
             }
 
         }.resume()
     }
 
-    public func getAlbumsInformation(artist: String, album: String, completion: @escaping (AlbumDetails) -> Void) {
+    public func getAlbumsInformation(artist: String, album: String, completion: @escaping (AlbumDetails?, Error?) -> Void) {
         // ALBUM INFO API
         let infoURL = "\(BASE_URL)?method=album.getinfo&api_key=\(API_KEY)&artist=\(artist)&album=\(album)&format=json"
         var resultInfoURL = infoURL.removingPercentEncoding
@@ -55,21 +57,22 @@ class Webservice {
                         do {
                             let jsonData = try decoder.decode(AlbumDetails.self, from: data)
                             DispatchQueue.main.async {
-                                completion(jsonData)
+                                completion(jsonData, nil)
                             }
                         } catch {
                             print("error trying to convert data to JSON")
                             print("INFO JSON ERROR = \(error.localizedDescription)")
-//                            completion(error)
+                            completion(nil, error)
                         }
                     }
                 } else {
-                    self.printErrorMessage(statusCode: self.statusCode)
+                    completion(nil, self.printErrorMessage(statusCode: self.statusCode) as? Error)
                 }
             }
 
             if(error != nil) {
                 print("INFO API ERROR = \(String(describing: error?.localizedDescription))")
+                completion(nil, error)
             }
 
         }.resume()
@@ -111,7 +114,7 @@ class Webservice {
         default:
             errMsg = "UNKNOWN"
         }
-        print("SEARCH API ERROR = \(errMsg)")
+        print("STATUS CODE ERROR = \(errMsg)")
     }
 
 }

@@ -12,7 +12,6 @@ extension Double {
 }
 
 func formatNumber(_ n: Int) -> String {
-
     let num = abs(Double(n))
     let sign = (n < 0) ? "-" : ""
 
@@ -62,4 +61,11 @@ public func showAnimation(rootVC: UIViewController, shouldStartAnimation: Bool) 
             viewWithTag.removeFromSuperview()
         }
     }
+}
+
+func showErrorDialogBox(on rootVc: UIViewController, with errorMsg: String) {
+    let alertController = UIAlertController(title: "Error", message: errorMsg, preferredStyle: .alert)
+    let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+    alertController.addAction(alertAction)
+    rootVc.present(alertController, animated: true, completion: nil)
 }

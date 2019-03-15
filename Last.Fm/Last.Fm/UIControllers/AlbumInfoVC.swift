@@ -1,7 +1,7 @@
 
 import UIKit
 
-class AlbumInfoVC: UIViewController, InfoFetchDelegate, UITableViewDelegate, UITableViewDataSource {
+class AlbumInfoVC: UIViewController, InfoFetchDelegate, UITableViewDelegate, UITableViewDataSource, ErrorDelegate {
     var album: String?
     var artist: String?
 
@@ -21,11 +21,14 @@ class AlbumInfoVC: UIViewController, InfoFetchDelegate, UITableViewDelegate, UIT
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        albumInfoViewModel.delegate = self
+        albumInfoViewModel.dataDelegate = self
+        albumInfoViewModel.errDelegate = self
 
         infoTableView.delegate = self
         infoTableView.dataSource = self
         infoTableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        infoTableView.tableFooterView = UIView(frame: .zero)
+
 
         wikiView.frame = CGRect(x: 15, y: 100, width: screenWidth - 30, height: screenHeight - 130)
         wikiView.backgroundColor = UIColor.lightText
@@ -35,12 +38,25 @@ class AlbumInfoVC: UIViewController, InfoFetchDelegate, UITableViewDelegate, UIT
         view.addSubview(wikiView)
         wikiView.isHidden = true
 
+        wikiInfoBtn.isUserInteractionEnabled = true
+
         // Fetch Album Information
+        showAnimation(rootVC: self, shouldStartAnimation: true)
         albumInfoViewModel.fetchAlbumInformation(artist: artist!, album: album!)
+    }
+
+    func sendErrorInfoToUI(errMsg: String) {
+        print("Error Received")
+        DispatchQueue.main.async {
+            self.wikiInfoBtn.isUserInteractionEnabled = false
+            showAnimation(rootVC: self, shouldStartAnimation: false)
+            showErrorDialogBox(on: self, with: errMsg)
+        }
     }
 
     func albumsInfoDataFetched() {
         print("albumsInfoDataFetched")
+        showAnimation(rootVC: self, shouldStartAnimation: false)
 
         // Fill Up AlbumInfoDetails
         navigationItem.title = albumInfoViewModel.getArtist()
@@ -100,7 +116,7 @@ class AlbumInfoVC: UIViewController, InfoFetchDelegate, UITableViewDelegate, UIT
         if let publishedText =  wikiInfo?.published,
             let summaryText = wikiInfo?.summary,
             let content = wikiInfo?.content {
-            textView.text = "\n Published: \(publishedText) \n\n Summary: \(summaryText) \n\n Content: \(content) \n"
+            textView.text = "\nPublished: \(publishedText) \n\nSummary: \(summaryText) \n\nContent: \(content) \n"
         } else {
             textView.text = "Wiki Information Not Available"
         }

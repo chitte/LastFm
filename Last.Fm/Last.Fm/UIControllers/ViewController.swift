@@ -2,7 +2,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UISearchBarDelegate, DataCompletionDelegate {
+class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UISearchBarDelegate, DataCompletionDelegate, ErrorDelegate {
 
     @IBOutlet var collectionSearchBar: UISearchBar!
     @IBOutlet var collectionView: UICollectionView!
@@ -23,7 +23,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         collectionSearchBar.delegate = self
         collectionView.dataSource = self
         collectionView.delegate = self
-        albumViewModel.delegate = self
+
+        albumViewModel.dataDelegate = self
+        albumViewModel.errDelegate = self
 
         collectionView.addSubview(refreshControl)
 
@@ -45,6 +47,14 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         showAnimation(rootVC: self, shouldStartAnimation: false)
         self.refreshControl.endRefreshing()
         self.collectionView.reloadData()
+    }
+
+    func sendErrorInfoToUI(errMsg: String) {
+        print("ErrorReceived")
+        DispatchQueue.main.async {
+            showAnimation(rootVC: self, shouldStartAnimation: false)
+            showErrorDialogBox(on: self, with: errMsg)
+        }
     }
 
     // MARK: Search

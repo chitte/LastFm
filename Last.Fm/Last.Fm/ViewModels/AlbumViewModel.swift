@@ -18,13 +18,18 @@ class AlbumViewModel {
     private var albums: Albums?
     private var filteredAlbums: Albums?
 
-    var delegate: DataCompletionDelegate?
+    var dataDelegate: DataCompletionDelegate?
+    var errDelegate: ErrorDelegate?
 
     func fetchAlbumData() {
-        webService.getAlbumsData { (data) in
-            self.albums = data
-            self.filteredAlbums = self.albums
-            self.delegate?.albumsDataFetched()
+        webService.getAlbumsData { data, error  in
+            if error != nil {
+                self.errDelegate?.sendErrorInfoToUI(errMsg: (error?.localizedDescription)!)
+            } else {
+                self.albums = data
+                self.filteredAlbums = self.albums
+                self.dataDelegate?.albumsDataFetched()
+            }
         }
     }
 

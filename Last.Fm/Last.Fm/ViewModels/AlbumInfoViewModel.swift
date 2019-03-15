@@ -11,12 +11,17 @@ class AlbumInfoViewModel {
     private var webService = Webservice()
     private var albumInfoDetails: AlbumDetails?
 
-    var delegate: InfoFetchDelegate?
+    var dataDelegate: InfoFetchDelegate?
+    var errDelegate: ErrorDelegate?
 
     func fetchAlbumInformation(artist: String, album: String) {
-        webService.getAlbumsInformation(artist: artist, album: album) { data in
-            self.albumInfoDetails = data
-            self.delegate?.albumsInfoDataFetched()
+        webService.getAlbumsInformation(artist: artist, album: album) { data, error  in
+            if error != nil {
+                self.errDelegate?.sendErrorInfoToUI(errMsg: (error?.localizedDescription)!)
+            } else {
+                self.albumInfoDetails = data
+                self.dataDelegate?.albumsInfoDataFetched()
+            }
         }
     }
 
