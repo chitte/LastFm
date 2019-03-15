@@ -14,6 +14,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
 
     var albumViewModel = AlbumViewModel()
+    var refreshControl = UIRefreshControl()
     var cache: NSCache<AnyObject, AnyObject>!
 
     override func viewDidLoad() {
@@ -24,14 +25,23 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         collectionView.delegate = self
         albumViewModel.delegate = self
 
+        collectionView.addSubview(refreshControl)
+
         self.cache = NSCache()
 
         // Get Album Data
+        albumViewModel.fetchAlbumData()
+
+        self.refreshControl.addTarget(self, action: #selector(refreshCollectionView), for: .valueChanged)
+    }
+
+    @objc func refreshCollectionView() {
         albumViewModel.fetchAlbumData()
     }
 
     func albumsDataFetched() {
         print("albumsDataFetched")
+        self.refreshControl.endRefreshing()
         self.collectionView.reloadData()
     }
 
