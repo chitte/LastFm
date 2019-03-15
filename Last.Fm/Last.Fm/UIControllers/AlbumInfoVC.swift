@@ -31,6 +31,14 @@ class AlbumInfoVC: UIViewController, InfoFetchDelegate, UITableViewDelegate, UIT
         infoTableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         infoTableView.tableFooterView = UIView(frame: .zero)
 
+        setUpWikiView()
+
+        // Fetch Album Information
+        showAnimation(rootVC: self, shouldStartAnimation: true)
+        albumInfoViewModel.fetchAlbumInformation(artist: artist!, album: album!)
+    }
+
+    func setUpWikiView() {
         wikiView.frame = CGRect(x: 15, y: 100, width: screenWidth - 30, height: screenHeight - 130)
         wikiView.backgroundColor = UIColor.lightText
         wikiView.layer.cornerRadius = 8
@@ -39,11 +47,30 @@ class AlbumInfoVC: UIViewController, InfoFetchDelegate, UITableViewDelegate, UIT
         view.addSubview(wikiView)
         wikiView.isHidden = true
 
-        wikiInfoBtn.isUserInteractionEnabled = true
+        textView.frame = CGRect(x: 0, y: 0, width: wikiView.frame.width, height: wikiView.frame.height)
+        textView.textAlignment = NSTextAlignment.justified
+        textView.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.75)
+        textView.textColor = UIColor.white
+        textView.font = UIFont.systemFont(ofSize: IS_IPAD ? 28 : 20)
+        textView.isSelectable = true
+        textView.isEditable = false
+        textView.dataDetectorTypes = UIDataDetectorTypes.link
+        textView.layer.cornerRadius = 10
+        textView.autocorrectionType = UITextAutocorrectionType.yes
+        textView.spellCheckingType = UITextSpellCheckingType.yes
+        wikiView.addSubview(textView)
+        textView.isHidden = true
 
-        // Fetch Album Information
-        showAnimation(rootVC: self, shouldStartAnimation: true)
-        albumInfoViewModel.fetchAlbumInformation(artist: artist!, album: album!)
+        //closeButton.removeFromSuperview()
+        closeButton.frame = CGRect(x: wikiView.frame.width - 46, y: 2, width: 44, height: 44)
+        closeButton.backgroundColor = UIColor.clear
+        closeButton.setTitle("x", for: UIControl.State.normal)
+        closeButton.setTitleColor(UIColor.white, for: UIControl.State.normal)
+        closeButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: IS_IPAD ? 40 : 30)
+        closeButton.addTarget(self, action: #selector(buttonClicked), for: .touchUpInside)
+        wikiView.addSubview(closeButton)
+
+        wikiInfoBtn.isUserInteractionEnabled = true
     }
 
     // MARK: Error Display
@@ -110,13 +137,12 @@ class AlbumInfoVC: UIViewController, InfoFetchDelegate, UITableViewDelegate, UIT
     @IBAction func wikiInfoAction(_: Any) {
         navigationController?.navigationBar.isUserInteractionEnabled = false
         wikiView.isHidden = false
+        textView.isHidden = false
+
         wikiInfoBtn.isUserInteractionEnabled = false
 
         let wikiInfo = albumInfoViewModel.getAlbumWikiInfo()
 
-        textView.removeFromSuperview()
-        textView.frame = CGRect(x: 0, y: 0, width: wikiView.frame.width, height: wikiView.frame.height)
-        textView.textAlignment = NSTextAlignment.justified
         if let publishedText = wikiInfo?.published,
             let summaryText = wikiInfo?.summary,
             let content = wikiInfo?.content {
@@ -125,25 +151,6 @@ class AlbumInfoVC: UIViewController, InfoFetchDelegate, UITableViewDelegate, UIT
             textView.text = "Wiki Information Not Available"
         }
 
-        textView.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.75)
-        textView.textColor = UIColor.white
-        textView.font = UIFont.systemFont(ofSize: IS_IPAD ? 28 : 20)
-        textView.isSelectable = true
-        textView.isEditable = false
-        textView.dataDetectorTypes = UIDataDetectorTypes.link
-        textView.layer.cornerRadius = 10
-        textView.autocorrectionType = UITextAutocorrectionType.yes
-        textView.spellCheckingType = UITextSpellCheckingType.yes
-        wikiView.addSubview(textView)
-
-        closeButton.removeFromSuperview()
-        closeButton.frame = CGRect(x: wikiView.frame.width - 46, y: 2, width: 44, height: 44)
-        closeButton.backgroundColor = UIColor.clear
-        closeButton.setTitle("x", for: UIControl.State.normal)
-        closeButton.setTitleColor(UIColor.white, for: UIControl.State.normal)
-        closeButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: IS_IPAD ? 40 : 30)
-        closeButton.addTarget(self, action: #selector(buttonClicked), for: .touchUpInside)
-        wikiView.addSubview(closeButton)
     }
 
     @objc func buttonClicked() {
