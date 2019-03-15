@@ -60,6 +60,7 @@ class Webservice {
                         } catch {
                             print("error trying to convert data to JSON")
                             print("INFO JSON ERROR = \(error.localizedDescription)")
+//                            completion(error)
                         }
                     }
                 } else {

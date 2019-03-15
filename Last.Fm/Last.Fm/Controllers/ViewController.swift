@@ -30,6 +30,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         self.cache = NSCache()
 
         // Get Album Data
+        showAnimation(rootVC: self, shouldStartAnimation: true)
         albumViewModel.fetchAlbumData()
 
         self.refreshControl.addTarget(self, action: #selector(refreshCollectionView), for: .valueChanged)
@@ -41,6 +42,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 
     func albumsDataFetched() {
         print("albumsDataFetched")
+        showAnimation(rootVC: self, shouldStartAnimation: false)
         self.refreshControl.endRefreshing()
         self.collectionView.reloadData()
     }

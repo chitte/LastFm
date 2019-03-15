@@ -62,6 +62,13 @@ class AlbumInfoViewModel {
         return imageUrl
     }
 
+    func getTracksCount() -> Int {
+        guard let count = self.albumInfoDetails?.album.tracks.track.count else {
+            return 0
+        }
+        return count
+    }
+
     func getAlbumTrackDetails(at index: Int) -> (name: String, duration: String)? {
         guard let trackInfo = self.albumInfoDetails?.album.tracks.track[index] else {
             return nil
