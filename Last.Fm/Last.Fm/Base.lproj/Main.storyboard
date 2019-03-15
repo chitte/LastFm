@@ -125,6 +125,21 @@
             </objects>
             <point key="canvasLocation" x="749.60000000000002" y="536.58170914542734"/>
         </scene>
+        <!--Album InfoVC-->
+        <scene sceneID="i1o-Y6-iS8">
+            <objects>
+                <viewController id="NNr-u6-YEK" customClass="AlbumInfoVC" customModule="Last_Fm" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="j7i-Qo-cxY">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="G2b-ox-Eud"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Jwh-gG-aJb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1506" y="537"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="sWl-ys-cRU">
             <objects>

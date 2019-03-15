@@ -4,6 +4,7 @@ import Foundation
 
 protocol DataCompletionDelegate {
     func albumsDataFetched()
+    func albumsInformationFetched()
 }
 
 enum ImageSize: String {
@@ -18,6 +19,8 @@ class AlbumViewModel {
     private var albums: Albums?
     private var filteredAlbums: Albums?
 
+    private var albumDetails: AlbumDetails?
+
     var delegate: DataCompletionDelegate?
 
     func fetchAlbumData() {
@@ -25,6 +28,13 @@ class AlbumViewModel {
             self.albums = data
             self.filteredAlbums = self.albums
             self.delegate?.albumsDataFetched()
+        }
+    }
+
+    func fetchAlbumInformation(artist: String, album: String) {
+        webService.getAlbumsInformation(artist: artist, album: album) { data in
+            self.albumDetails = data
+            self.delegate?.albumsInformationFetched()
         }
     }
 

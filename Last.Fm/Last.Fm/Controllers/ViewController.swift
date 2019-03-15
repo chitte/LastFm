@@ -117,6 +117,17 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         return cell
     }
 
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let album = albumViewModel.fetchAlbumName(in: indexPath.row)
+        let artist = albumViewModel.fetchArtistNmae(in: indexPath.row)
+
+        albumViewModel.fetchAlbumInformation(artist: artist, album: album)
+    }
+
+    func albumsInformationFetched() {
+        print("albumsInformationFetched")
+    }
+
     func getImageData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
         URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
     }
