@@ -97,14 +97,14 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         cell.artistName.font = UIFont.boldSystemFont(ofSize: 16.0)
         cell.transImageView.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.25)
 
-        cell.albumName.text = albumViewModel.fetchAlbumName(in: indexPath.row)
-        cell.artistName.text = albumViewModel.fetchArtistNmae(in: indexPath.row)
+        cell.albumName.text = albumViewModel.fetchAlbumName(at: indexPath.row)
+        cell.artistName.text = albumViewModel.fetchArtistNmae(at: indexPath.row)
 
         if (self.cache.object(forKey: (indexPath as NSIndexPath).row as AnyObject) != nil){
             print("Cached image used, no need to download it")
             cell.albumImageView.image = self.cache.object(forKey: (indexPath as NSIndexPath).row as AnyObject) as? UIImage
         } else {
-            let albumImage = albumViewModel.fetchAlbumImageWith(in: indexPath.row, size: ImageSize.extralarge)
+            let albumImage = albumViewModel.fetchAlbumImageWith(at: indexPath.row, size: ImageSize.extralarge)
             if let url = URL(string: albumImage!) {
                 getImageData(from: url) { data, response, error in
                     guard let data = data, error == nil else { return }
@@ -128,18 +128,15 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let album = albumViewModel.fetchAlbumName(in: indexPath.row)
-        let artist = albumViewModel.fetchArtistNmae(in: indexPath.row)
+        let album = albumViewModel.fetchAlbumName(at: indexPath.row)
+        let artist = albumViewModel.fetchArtistNmae(at: indexPath.row)
 
-        albumViewModel.fetchAlbumInformation(artist: artist, album: album)
-    }
-
-    func albumsInformationFetched() {
-        print("albumsInformationFetched")
-    }
-
-    func getImageData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
-        URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
+        print("didSelectItemAt CLICKED")
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let infoController = storyboard.instantiateViewController(withIdentifier: "AlbumInfoVC") as! AlbumInfoVC
+        infoController.album = album
+        infoController.artist = artist
+        self.navigationController?.pushViewController(infoController, animated: true)
     }
 
     // MARK: <UICollectionViewDelegateFlowLayout>

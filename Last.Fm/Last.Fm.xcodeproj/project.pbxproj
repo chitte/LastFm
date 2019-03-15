@@ -19,6 +19,8 @@
 		44C6A1B7223A7D70009F52BB /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C6A1B6223A7D70009F52BB /* Constants.swift */; };
 		44C6A1B9223B54B0009F52BB /* AlbumInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C6A1B8223B54B0009F52BB /* AlbumInfo.swift */; };
 		44C6A1BB223B6079009F52BB /* AlbumInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C6A1BA223B6079009F52BB /* AlbumInfoVC.swift */; };
+		44C6A1BD223B7191009F52BB /* AlbumInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C6A1BC223B7191009F52BB /* AlbumInfoViewModel.swift */; };
+		44C6A1BF223B8CB7009F52BB /* ViewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C6A1BE223B8CB7009F52BB /* ViewHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +38,8 @@
 		44C6A1B6223A7D70009F52BB /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		44C6A1B8223B54B0009F52BB /* AlbumInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumInfo.swift; sourceTree = "<group>"; };
 		44C6A1BA223B6079009F52BB /* AlbumInfoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumInfoVC.swift; sourceTree = "<group>"; };
+		44C6A1BC223B7191009F52BB /* AlbumInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumInfoViewModel.swift; sourceTree = "<group>"; };
+		44C6A1BE223B8CB7009F52BB /* ViewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +100,7 @@
 			children = (
 				44C6A1A5223A7135009F52BB /* ViewController.swift */,
 				44C6A1BA223B6079009F52BB /* AlbumInfoVC.swift */,
+				44C6A1BE223B8CB7009F52BB /* ViewHelper.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -121,6 +126,7 @@
 			isa = PBXGroup;
 			children = (
 				44C6A1B1223A7D11009F52BB /* AlbumViewModel.swift */,
+				44C6A1BC223B7191009F52BB /* AlbumInfoViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -218,6 +224,8 @@
 				44C6A1AC223A7502009F52BB /* CollectionViewCell.swift in Sources */,
 				44C6A1B7223A7D70009F52BB /* Constants.swift in Sources */,
 				44C6A1B0223A7D03009F52BB /* APIClient.swift in Sources */,
+				44C6A1BF223B8CB7009F52BB /* ViewHelper.swift in Sources */,
+				44C6A1BD223B7191009F52BB /* AlbumInfoViewModel.swift in Sources */,
 				44C6A1AE223A7CE0009F52BB /* Album.swift in Sources */,
 				44C6A1BB223B6079009F52BB /* AlbumInfoVC.swift in Sources */,
 				44C6A1B9223B54B0009F52BB /* AlbumInfo.swift in Sources */,

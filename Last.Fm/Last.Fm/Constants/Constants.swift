@@ -5,7 +5,6 @@ import Foundation
 let API_KEY = "7677c6773ed8cfeb5f2eb7de4728ea02"
 let BASE_URL = "http://ws.audioscrobbler.com/2.0/"
 
-
 enum AlbumAPIErrorCode: Int {
     case INVALID_SERVICE
     case INVALID_METHOD

@@ -4,7 +4,6 @@ import Foundation
 
 protocol DataCompletionDelegate {
     func albumsDataFetched()
-    func albumsInformationFetched()
 }
 
 enum ImageSize: String {
@@ -19,8 +18,6 @@ class AlbumViewModel {
     private var albums: Albums?
     private var filteredAlbums: Albums?
 
-    private var albumDetails: AlbumDetails?
-
     var delegate: DataCompletionDelegate?
 
     func fetchAlbumData() {
@@ -31,13 +28,6 @@ class AlbumViewModel {
         }
     }
 
-    func fetchAlbumInformation(artist: String, album: String) {
-        webService.getAlbumsInformation(artist: artist, album: album) { data in
-            self.albumDetails = data
-            self.delegate?.albumsInformationFetched()
-        }
-    }
-
     func getAlbumCount() -> Int {
         guard let count = self.filteredAlbums?.results.albummatches.album.count else {
             return 0
@@ -45,21 +35,21 @@ class AlbumViewModel {
         return count
     }
 
-    func fetchAlbumName(in index: Int) -> String {
+    func fetchAlbumName(at index: Int) -> String {
         guard let artist = self.filteredAlbums?.results.albummatches.album[index].name else {
             return ""
         }
         return artist
     }
 
-    func fetchArtistNmae(in index: Int) -> String {
+    func fetchArtistNmae(at index: Int) -> String {
         guard let albumName = self.filteredAlbums?.results.albummatches.album[index].artist else {
             return ""
         }
         return albumName
     }
 
-    func fetchAlbumImageWith(in index: Int, size: ImageSize) -> String? {
+    func fetchAlbumImageWith(at index: Int, size: ImageSize) -> String? {
         guard let imagesArray = self.filteredAlbums?.results.albummatches.album[index].image else {
             return nil
         }
