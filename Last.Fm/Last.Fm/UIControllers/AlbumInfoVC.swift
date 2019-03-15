@@ -19,6 +19,8 @@ class AlbumInfoVC: UIViewController, InfoFetchDelegate, UITableViewDelegate, UIT
     @IBOutlet var wikiInfoBtn: UIButton!
     var albumInfoViewModel = AlbumInfoViewModel()
 
+    // MARK: ViewDidLoad
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         albumInfoViewModel.dataDelegate = self
@@ -45,6 +47,8 @@ class AlbumInfoVC: UIViewController, InfoFetchDelegate, UITableViewDelegate, UIT
         albumInfoViewModel.fetchAlbumInformation(artist: artist!, album: album!)
     }
 
+    // MARK: Error Display
+    
     func sendErrorInfoToUI(errMsg: String) {
         print("Error Received")
         DispatchQueue.main.async {
@@ -53,6 +57,8 @@ class AlbumInfoVC: UIViewController, InfoFetchDelegate, UITableViewDelegate, UIT
             showErrorDialogBox(on: self, with: errMsg)
         }
     }
+
+    // MARK: Album Info Fetched
 
     func albumsInfoDataFetched() {
         print("albumsInfoDataFetched")

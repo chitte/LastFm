@@ -17,6 +17,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     var refreshControl = UIRefreshControl()
     var cache: NSCache<AnyObject, AnyObject>!
 
+    // MARK: ViewDidLoad
+
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.setNavigationBarHidden(false, animated: true)
@@ -42,12 +44,16 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         albumViewModel.fetchAlbumData()
     }
 
+    // MARK: Album Data Fetched
+
     func albumsDataFetched() {
         print("albumsDataFetched")
         showAnimation(rootVC: self, shouldStartAnimation: false)
         self.refreshControl.endRefreshing()
         self.collectionView.reloadData()
     }
+
+    // MARK: Error Display
 
     func sendErrorInfoToUI(errMsg: String) {
         print("ErrorReceived")
@@ -57,11 +63,13 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         }
     }
 
-    // MARK: Search
+    // MARK: Search Delegate Methods
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if(searchText.count > 0) {
             albumViewModel.filterAlbums(searchString: searchText)
+        } else {
+            albumViewModel.filterAlbums(searchString: "")
         }
         collectionView.reloadData()
     }
@@ -72,6 +80,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 
     func searchBarTextDidBeginEditing(_: UISearchBar) {
         collectionSearchBar.setShowsCancelButton(true, animated: true)
+        collectionSearchBar.text = ""
     }
 
     func searchBarTextDidEndEditing(_: UISearchBar) {
@@ -80,13 +89,12 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 
     func searchBarCancelButtonClicked(_: UISearchBar) {
         albumViewModel.filterAlbums(searchString: "")
-
         collectionSearchBar.resignFirstResponder()
-        collectionSearchBar.text = ""
+        collectionSearchBar.text = "Search by album or artist"
         collectionView.reloadData()
     }
 
-    // MARK: CollectionView
+    // MARK: CollectionView Delegates
 
     func numberOfSectionsInCollectionView(collectionView _: UICollectionView) -> Int {
         return 1

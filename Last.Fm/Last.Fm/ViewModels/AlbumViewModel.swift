@@ -68,6 +68,8 @@ class AlbumViewModel {
         return imageUrl
     }
 
+    // MARK: Filter Albums based on album or artist
+
     func filterAlbums(searchString: String) {
         filteredAlbums = albums
         if(searchString != "") {
