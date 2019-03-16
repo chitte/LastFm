@@ -22,6 +22,7 @@
 		44C6A1C6223BC6B3009F52BB /* AlbumInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C6A1C3223BC6B2009F52BB /* AlbumInfoVC.swift */; };
 		44C6A1C7223BC6B3009F52BB /* ViewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C6A1C4223BC6B2009F52BB /* ViewHelper.swift */; };
 		44C6A1C9223BC6D8009F52BB /* ErrorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C6A1C8223BC6D8009F52BB /* ErrorService.swift */; };
+		44F62B5A223CC734005EE217 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F62B58223CC733005EE217 /* Reachability.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,9 @@
 		44C6A1C3223BC6B2009F52BB /* AlbumInfoVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumInfoVC.swift; sourceTree = "<group>"; };
 		44C6A1C4223BC6B2009F52BB /* ViewHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewHelper.swift; sourceTree = "<group>"; };
 		44C6A1C8223BC6D8009F52BB /* ErrorService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorService.swift; sourceTree = "<group>"; };
+		44F62B58223CC733005EE217 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
+		44F62B59223CC733005EE217 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		44F62B5D223CD776005EE217 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +64,7 @@
 			children = (
 				44C6A18E223A701C009F52BB /* Last.Fm */,
 				44C6A18D223A701C009F52BB /* Products */,
+				44F62B5C223CD776005EE217 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -74,6 +79,7 @@
 		44C6A18E223A701C009F52BB /* Last.Fm */ = {
 			isa = PBXGroup;
 			children = (
+				44F62B57223CC733005EE217 /* Reachability */,
 				44C6A1C1223BC6B2009F52BB /* UIControllers */,
 				44C6A1B5223A7D65009F52BB /* Constants */,
 				44C6A1AA223A7209009F52BB /* Webservices */,
@@ -148,6 +154,23 @@
 				44C6A1C8223BC6D8009F52BB /* ErrorService.swift */,
 			);
 			path = UIControllers;
+			sourceTree = "<group>";
+		};
+		44F62B57223CC733005EE217 /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				44F62B58223CC733005EE217 /* Reachability.swift */,
+				44F62B59223CC733005EE217 /* Reachability.h */,
+			);
+			path = Reachability;
+			sourceTree = "<group>";
+		};
+		44F62B5C223CD776005EE217 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				44F62B5D223CD776005EE217 /* SystemConfiguration.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -233,6 +256,7 @@
 				44C6A1BD223B7191009F52BB /* AlbumInfoViewModel.swift in Sources */,
 				44C6A1AE223A7CE0009F52BB /* Album.swift in Sources */,
 				44C6A1B9223B54B0009F52BB /* AlbumInfo.swift in Sources */,
+				44F62B5A223CC734005EE217 /* Reachability.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

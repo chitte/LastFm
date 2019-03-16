@@ -16,6 +16,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     var refreshControl = UIRefreshControl()
     var cache: NSCache<AnyObject, AnyObject>!
 
+    let reachability = Reachability()
+
     // MARK: ViewDidLoad
 
     override func viewDidLoad() {
@@ -28,19 +30,65 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         albumViewModel.dataDelegate = self
         albumViewModel.errDelegate = self
 
-        collectionView.addSubview(refreshControl)
-
         cache = NSCache()
 
-        // Get Album Data
-        showAnimation(rootVC: self, shouldStartAnimation: true)
-        albumViewModel.fetchAlbumData()
-
         refreshControl.addTarget(self, action: #selector(refreshCollectionView), for: .valueChanged)
+        collectionView.addSubview(refreshControl)
+
+        addObserverForNetworkReachability()
+        internetChanged()
     }
 
+    // MARK: Network Reachability Observer
+
+    func addObserverForNetworkReachability() {
+        NotificationCenter.default.addObserver(self, selector: #selector(internetChanged), name: Notification.Name.reachabilityChanged, object: reachability)
+        do {
+            try reachability?.startNotifier()
+        } catch {
+            print("Could not strat notifier")
+        }
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.reachabilityChanged, object: reachability)
+    }
+
+    // MARK:  Detect Network Change
+
+    @objc func internetChanged() {
+        let reachability = Reachability()
+        if reachability?.connection != .none {
+            if reachability?.connection == .wifi {
+                // Get Album Data
+                showAnimation(rootVC: self, shouldStartAnimation: true)
+                albumViewModel.fetchAlbumData()
+            }
+            else {
+                DispatchQueue.main.async {
+                    self.handleNoNetworkUI()
+                }
+            }
+        } else {
+            DispatchQueue.main.async {
+                self.handleNoNetworkUI()
+            }
+        }
+    }
+
+    // MARK: Handle No Network UI
+
+    func handleNoNetworkUI() {
+        showErrorDialogBox(on: self, with: "The Internet conenction appears to be offline")
+        showAnimation(rootVC: self, shouldStartAnimation: false)
+        self.refreshControl.endRefreshing()
+        self.collectionView.reloadData()
+    }
+
+    // MARK: Refresh Collection View
+
     @objc func refreshCollectionView() {
-        albumViewModel.fetchAlbumData()
+        internetChanged()
     }
 
     // MARK: Album Data Fetched
@@ -59,6 +107,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         DispatchQueue.main.async {
             showAnimation(rootVC: self, shouldStartAnimation: false)
             showErrorDialogBox(on: self, with: errMsg)
+            self.refreshControl.endRefreshing()
+            self.collectionView.reloadData()
         }
     }
 
@@ -100,6 +150,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
 
     func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
+        if(albumViewModel.getAlbumCount() == 0) {
+            return 10
+        }
         return albumViewModel.getAlbumCount()
     }
 
@@ -124,23 +177,26 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             cell.albumImageView.image = cache.object(forKey: (indexPath as NSIndexPath).row as AnyObject) as? UIImage
         } else {
             let albumImage = albumViewModel.fetchAlbumImageWith(at: indexPath.row, size: ImageSize.extralarge)
-            if let url = URL(string: albumImage!) {
-                getImageData(from: url) { data, _, error in
-                    guard let data = data, error == nil else { return }
-                    // print(response?.suggestedFilename ?? url.lastPathComponent)
-                    // print("Download Finished")
-                    DispatchQueue.main.async {
-                        let img = UIImage(data: data)
-                        cell.albumImageView.image = img
-                        self.cache.setObject(img!, forKey: (indexPath as NSIndexPath).row as AnyObject)
+            if let imageStr = albumImage {
+                if let url = URL(string: imageStr) {
+                    getImageData(from: url) { data, _, error in
+                        guard let data = data, error == nil else { return }
+                        // print(response?.suggestedFilename ?? url.lastPathComponent)
+                        // print("Download Finished")
+                        DispatchQueue.main.async {
+                            let img = UIImage(data: data)
+                            cell.albumImageView.image = img
+                            self.cache.setObject(img!, forKey: (indexPath as NSIndexPath).row as AnyObject)
+                        }
+                    }
+                } else {
+                    print("URL IS NIL")
+                    if let img = UIImage(data: Data()) {
+                        cache?.setObject(img, forKey: (indexPath as NSIndexPath).row as AnyObject)
                     }
                 }
-            } else {
-                print("URL IS NIL")
-                if let img = UIImage(data: Data()) {
-                    cache?.setObject(img, forKey: (indexPath as NSIndexPath).row as AnyObject)
-                }
             }
+
         }
 
         return cell

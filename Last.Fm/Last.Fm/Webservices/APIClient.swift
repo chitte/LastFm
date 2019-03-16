@@ -27,7 +27,7 @@ class Webservice {
                         }
                     }
                 } else {
-                    completion(nil, self.printErrorMessage(statusCode: self.statusCode) as? Error)
+                    completion(nil, self.showErrorMessage(statusCode: self.statusCode) as? Error)
                 }
             }
 
@@ -66,7 +66,7 @@ class Webservice {
                         }
                     }
                 } else {
-                    completion(nil, self.printErrorMessage(statusCode: self.statusCode) as? Error)
+                    completion(nil, self.showErrorMessage(statusCode: self.statusCode) as? Error)
                 }
             }
 
@@ -79,7 +79,7 @@ class Webservice {
     }
 
     // API ERROR MESSAGES
-    func printErrorMessage(statusCode: Int) {
+    func showErrorMessage(statusCode: Int) {
         var errMsg: String = ""
         print("ERROR STATUS CODE = \(statusCode)")
         switch statusCode {
