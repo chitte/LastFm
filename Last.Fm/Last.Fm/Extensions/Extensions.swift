@@ -1,35 +1,61 @@
 
 import UIKit
 
-func getImageData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> Void) {
-    URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
+extension UIImage {
+    convenience init?(url: URL?) {
+        guard let url = url else { return nil }
+
+        do {
+            let data = try Data(contentsOf: url)
+            self.init(data: data)
+        } catch {
+            print("Cannot load image from url: \(url) with error: \(error)")
+            return nil
+        }
+    }
 }
 
-func formatNumber(_ n: Int) -> String {
-    let num = abs(Double(n))
-    let sign = (n < 0) ? "-" : ""
+extension UIImageView {
+    func load(url: URL) {
+        DispatchQueue.global().async { [weak self] in
+            if let data = try? Data(contentsOf: url) {
+                if let image = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        self?.image = image
+                    }
+                }
+            }
+        }
+    }
+}
 
-    switch num {
-    case 1_000_000_000...:
-        var formatted = num / 1_000_000_000
-        formatted = formatted.truncate(places: 1)
-        return "\(sign)\(formatted)B"
+extension Int {
+    public var formatNumber: String {
+        let num = abs(Double(self))
+        let sign = (self < 0) ? "-" : ""
 
-    case 1_000_000...:
-        var formatted = num / 1_000_000
-        formatted = formatted.truncate(places: 1)
-        return "\(sign)\(formatted)M"
+        switch num {
+        case 1_000_000_000...:
+            var formatted = num / 1_000_000_000
+            formatted = formatted.truncate(places: 1)
+            return "\(sign)\(formatted)B"
 
-    case 1000...:
-        var formatted = num / 1000
-        formatted = formatted.truncate(places: 1)
-        return "\(sign)\(formatted)K"
+        case 1_000_000...:
+            var formatted = num / 1_000_000
+            formatted = formatted.truncate(places: 1)
+            return "\(sign)\(formatted)M"
 
-    case 0...:
-        return "\(n)"
+        case 1000...:
+            var formatted = num / 1000
+            formatted = formatted.truncate(places: 1)
+            return "\(sign)\(formatted)K"
 
-    default:
-        return "\(sign)\(n)"
+        case 0...:
+            return "\(self)"
+
+        default:
+            return "\(sign)\(self)"
+        }
     }
 }
 

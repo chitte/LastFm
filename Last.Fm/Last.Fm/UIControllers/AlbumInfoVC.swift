@@ -123,18 +123,12 @@ extension AlbumInfoVC: InfoFetchDelegate, ErrorDelegate {
         navigationItem.title = albumInfoViewModel.getArtist()
 
         albumName.text = albumInfoViewModel.getAlbumName()
-        playCountInfo.text = "Players \((formatNumber(Int(albumInfoViewModel.getPlayCount())!)))"
-        listenersInfo.text = "Listeners \((formatNumber(Int(albumInfoViewModel.getListenersCount())!)))"
+        playCountInfo.text = "Players \(((Int(albumInfoViewModel.getPlayCount())!).formatNumber))"
+        listenersInfo.text = "Listeners \(((Int(albumInfoViewModel.getListenersCount())!).formatNumber))"
 
         let albumImageStr = albumInfoViewModel.getAlbumInfoImageWith(size: ImageSize.large)
         if let url = URL(string: albumImageStr!) {
-            getImageData(from: url) { data, _, error in
-                guard let data = data, error == nil else { return }
-                DispatchQueue.main.async {
-                    let img = UIImage(data: data)
-                    self.albumImage.image = img
-                }
-            }
+            albumImage.image = UIImage(url: url)
         }
 
         infoTableView.reloadData()

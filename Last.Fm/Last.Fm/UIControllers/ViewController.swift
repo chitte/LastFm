@@ -188,14 +188,8 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
             let albumImage = albumViewModel.fetchAlbumImageWith(at: indexPath.row, size: ImageSize.extralarge)
             if let imageStr = albumImage {
                 if let url = URL(string: imageStr) {
-                    getImageData(from: url) { data, _, error in
-                        guard let data = data, error == nil else { return }
-                        DispatchQueue.main.async {
-                            let img = UIImage(data: data)
-                            cell.albumImageView.image = img
-                            self.cache.setObject(img!, forKey: (indexPath as NSIndexPath).row as AnyObject)
-                        }
-                    }
+                    cell.albumImageView.image = UIImage(url: url)
+                    self.cache.setObject(UIImage(url: url)!, forKey: (indexPath as NSIndexPath).row as AnyObject)
                 } else {
                     print("URL IS NIL")
                     if let img = UIImage(data: Data()) {

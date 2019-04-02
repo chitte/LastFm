@@ -2,10 +2,6 @@
 
 import Foundation
 
-protocol DataCompletionDelegate {
-    func albumsDataFetched()
-}
-
 enum ImageSize: String {
     case small
     case medium

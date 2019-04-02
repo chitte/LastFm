@@ -2,10 +2,6 @@
 
 import Foundation
 
-protocol InfoFetchDelegate {
-    func albumsInfoDataFetched()
-}
-
 class AlbumInfoViewModel {
     private var webService = Webservice()
     private var albumInfoDetails: AlbumDetails?
