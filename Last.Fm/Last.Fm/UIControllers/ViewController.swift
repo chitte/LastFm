@@ -2,7 +2,10 @@
 
 import UIKit
 
-class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UISearchBarDelegate, DataCompletionDelegate, ErrorDelegate {
+class ViewController: UIViewController {
+
+    // MARK: Properties
+
     @IBOutlet var collectionSearchBar: UISearchBar!
     @IBOutlet var collectionView: UICollectionView!
 
@@ -50,10 +53,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         }
     }
 
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: Notification.Name.reachabilityChanged, object: reachability)
-    }
-
     // MARK:  Detect Network Change
 
     @objc func internetChanged() {
@@ -91,6 +90,13 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         internetChanged()
     }
 
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.reachabilityChanged, object: reachability)
+    }
+
+}
+
+extension ViewController: DataCompletionDelegate, ErrorDelegate {
     // MARK: Album Data Fetched
 
     func albumsDataFetched() {
@@ -111,6 +117,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             self.collectionView.reloadData()
         }
     }
+}
+
+extension ViewController: UISearchBarDelegate {
 
     // MARK: Search Delegate Methods
 
@@ -142,6 +151,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         collectionSearchBar.text = "Search by album or artist"
         collectionView.reloadData()
     }
+}
+
+extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     // MARK: CollectionView Delegates
 
@@ -150,9 +162,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
 
     func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
-        if(albumViewModel.getAlbumCount() == 0) {
-            return 10
-        }
         return albumViewModel.getAlbumCount()
     }
 
@@ -181,8 +190,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 if let url = URL(string: imageStr) {
                     getImageData(from: url) { data, _, error in
                         guard let data = data, error == nil else { return }
-                        // print(response?.suggestedFilename ?? url.lastPathComponent)
-                        // print("Download Finished")
                         DispatchQueue.main.async {
                             let img = UIImage(data: data)
                             cell.albumImageView.image = img
@@ -228,4 +235,5 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     func CGRectMake(_ x: CGFloat, _ y: CGFloat, _ width: CGFloat, _ height: CGFloat) -> CGRect {
         return CGRect(x: x, y: y, width: width, height: height)
     }
+
 }

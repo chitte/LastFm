@@ -4,7 +4,7 @@ import Foundation
 class Webservice {
     var statusCode: Int = 0
 
-    public func getAlbumsData(completion: @escaping (Albums?, Error?) -> Void) {
+    public func getAlbumsData(completion: @escaping (Albums?, ServiceError?) -> Void) {
         // ALBUM SEARCH API
         let albumsURL = URL(string: "\(BASE_URL)?method=album.search&album=believe&api_key=\(API_KEY)&format=json")!
         print("albumsSearchURL = \(albumsURL)")
@@ -23,23 +23,23 @@ class Webservice {
                         } catch {
                             print("error trying to convert data to JSON")
                             print("SEARCH JSON ERROR = \(error.localizedDescription)")
-                            completion(nil, error)
+                            completion(nil, ServiceError.jsonError(message: error.localizedDescription))
                         }
                     }
                 } else {
-                    completion(nil, self.showErrorMessage(statusCode: self.statusCode) as? Error)
+                    completion(nil, ServiceError.statutsCodeError(message: self.showErrorMessage(statusCode: self.statusCode)))
                 }
             }
 
             if error != nil {
                 print("SEARCH API ERROR = \(String(describing: error?.localizedDescription))")
-                completion(nil, error)
+                completion(nil, ServiceError.networkError(message: error?.localizedDescription ?? ""))
             }
 
         }.resume()
     }
 
-    public func getAlbumsInformation(artist: String, album: String, completion: @escaping (AlbumDetails?, Error?) -> Void) {
+    public func getAlbumsInformation(artist: String, album: String, completion: @escaping (AlbumDetails?, ServiceError?) -> Void) {
         // ALBUM INFO API
         let infoURL = "\(BASE_URL)?method=album.getinfo&api_key=\(API_KEY)&artist=\(artist)&album=\(album)&format=json"
         var resultInfoURL = infoURL.removingPercentEncoding
@@ -62,24 +62,24 @@ class Webservice {
                         } catch {
                             print("error trying to convert data to JSON")
                             print("INFO JSON ERROR = \(error.localizedDescription)")
-                            completion(nil, error)
+                            completion(nil, ServiceError.jsonError(message: error.localizedDescription))
                         }
                     }
                 } else {
-                    completion(nil, self.showErrorMessage(statusCode: self.statusCode) as? Error)
+                    completion(nil, ServiceError.statutsCodeError(message: self.showErrorMessage(statusCode: self.statusCode)))
                 }
             }
 
             if error != nil {
                 print("INFO API ERROR = \(String(describing: error?.localizedDescription))")
-                completion(nil, error)
+                completion(nil, ServiceError.networkError(message: error?.localizedDescription ?? ""))
             }
 
         }.resume()
     }
 
     // API ERROR MESSAGES
-    func showErrorMessage(statusCode: Int) {
+    func showErrorMessage(statusCode: Int) -> String {
         var errMsg: String = ""
         print("ERROR STATUS CODE = \(statusCode)")
         switch statusCode {
@@ -114,6 +114,6 @@ class Webservice {
         default:
             errMsg = "UNKNOWN"
         }
-        print("STATUS CODE ERROR = \(errMsg)")
+        return errMsg
     }
 }
