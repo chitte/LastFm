@@ -1,7 +1,7 @@
 
 import UIKit
 
-class AlbumInfoVC: UIViewController, InfoFetchDelegate, UITableViewDelegate, UITableViewDataSource, ErrorDelegate {
+class AlbumInfoVC: UIViewController {
     var album: String?
     var artist: String?
 
@@ -73,14 +73,43 @@ class AlbumInfoVC: UIViewController, InfoFetchDelegate, UITableViewDelegate, UIT
         wikiInfoBtn.isUserInteractionEnabled = true
     }
 
+    @IBAction func wikiInfoAction(_: Any) {
+        navigationController?.navigationBar.isUserInteractionEnabled = false
+        wikiView.isHidden = false
+        textView.isHidden = false
+
+        wikiInfoBtn.isUserInteractionEnabled = false
+
+        let wikiInfo = albumInfoViewModel.getAlbumWikiInfo()
+
+        if let publishedText = wikiInfo?.published,
+            let summaryText = wikiInfo?.summary,
+            let content = wikiInfo?.content {
+            textView.text = "\nPublished: \(publishedText) \n\nSummary: \(summaryText) \n\nContent: \(content) \n"
+        } else {
+            textView.text = "Wiki Information Not Available"
+        }
+
+    }
+
+    @objc func buttonClicked() {
+        print("Button Clicked")
+        navigationController?.navigationBar.isUserInteractionEnabled = true
+        wikiView.isHidden = true
+        wikiInfoBtn.isUserInteractionEnabled = true
+    }
+}
+
+extension AlbumInfoVC: InfoFetchDelegate, ErrorDelegate {
+
     // MARK: Error Display
 
     func sendErrorInfoToUI(errMsg: String) {
         print("Error Received")
         DispatchQueue.main.async {
             self.wikiInfoBtn.isUserInteractionEnabled = false
-            showAnimation(rootVC: self, shouldStartAnimation: false)
-            showErrorDialogBox(on: self, with: errMsg)
+            self.showAnimation(rootVC: self, shouldStartAnimation: false)
+            self.showErrorDialogBox(on: self, with: errMsg)
         }
     }
 
@@ -111,6 +140,12 @@ class AlbumInfoVC: UIViewController, InfoFetchDelegate, UITableViewDelegate, UIT
         infoTableView.reloadData()
     }
 
+}
+
+extension AlbumInfoVC: UITableViewDelegate, UITableViewDataSource {
+
+    // MARK: Tableview Delegates
+    
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         let trackInfoDetail = albumInfoViewModel.getAlbumTrackDetails(at: indexPath.row)
@@ -134,29 +169,4 @@ class AlbumInfoVC: UIViewController, InfoFetchDelegate, UITableViewDelegate, UIT
         return albumInfoViewModel.getTracksCount()
     }
 
-    @IBAction func wikiInfoAction(_: Any) {
-        navigationController?.navigationBar.isUserInteractionEnabled = false
-        wikiView.isHidden = false
-        textView.isHidden = false
-
-        wikiInfoBtn.isUserInteractionEnabled = false
-
-        let wikiInfo = albumInfoViewModel.getAlbumWikiInfo()
-
-        if let publishedText = wikiInfo?.published,
-            let summaryText = wikiInfo?.summary,
-            let content = wikiInfo?.content {
-            textView.text = "\nPublished: \(publishedText) \n\nSummary: \(summaryText) \n\nContent: \(content) \n"
-        } else {
-            textView.text = "Wiki Information Not Available"
-        }
-
-    }
-
-    @objc func buttonClicked() {
-        print("Button Clicked")
-        navigationController?.navigationBar.isUserInteractionEnabled = true
-        wikiView.isHidden = true
-        wikiInfoBtn.isUserInteractionEnabled = true
-    }
 }

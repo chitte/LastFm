@@ -111,8 +111,8 @@ extension ViewController: DataCompletionDelegate, ErrorDelegate {
     func sendErrorInfoToUI(errMsg: String) {
         print("ErrorReceived")
         DispatchQueue.main.async {
-            showAnimation(rootVC: self, shouldStartAnimation: false)
-            showErrorDialogBox(on: self, with: errMsg)
+            self.showAnimation(rootVC: self, shouldStartAnimation: false)
+            self.showErrorDialogBox(on: self, with: errMsg)
             self.refreshControl.endRefreshing()
             self.collectionView.reloadData()
         }
@@ -203,7 +203,6 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
                     }
                 }
             }
-
         }
 
         return cell
