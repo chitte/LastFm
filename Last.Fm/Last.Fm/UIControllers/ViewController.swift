@@ -25,25 +25,9 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         addObserverForNetworkReachability()
-
-        navigationController?.setNavigationBarHidden(false, animated: true)
-        collectionSearchBar.delegate = self
-
-        albumViewModel.dataDelegate = self
-        albumViewModel.errDelegate = self
-
-        cache = NSCache()
-
-        refreshControl.addTarget(self, action: #selector(refreshCollectionView), for: .valueChanged)
-        collectionView.addSubview(refreshControl)
-    }
-
-    // MARK: Refresh Collection View
-
-    @objc func refreshCollectionView() {
-        internetChanged()
+        setUpViewController()
+        addRefreshControl()
     }
 
     deinit {
@@ -61,6 +45,31 @@ extension ViewController {
         } catch {
             print("Could not strat notifier")
         }
+    }
+}
+
+extension ViewController {
+    func addRefreshControl() {
+        refreshControl.addTarget(self, action: #selector(refreshCollectionView), for: .valueChanged)
+        collectionView.addSubview(refreshControl)
+    }
+
+    // MARK: Refresh Collection View
+
+    @objc func refreshCollectionView() {
+        internetChanged()
+    }
+}
+
+extension ViewController {
+    func setUpViewController() {
+        navigationController?.setNavigationBarHidden(false, animated: true)
+        collectionSearchBar.delegate = self
+
+        cache = NSCache()
+
+        albumViewModel.dataDelegate = self
+        albumViewModel.errDelegate = self
     }
 }
 
