@@ -2,8 +2,6 @@
 
 import UIKit
 
-import Alamofire
-
 class ViewController: UIViewController {
 
     // MARK: Properties
@@ -42,11 +40,22 @@ class ViewController: UIViewController {
         collectionView.addSubview(refreshControl)
 
         addObserverForNetworkReachability()
-//        internetChanged()
     }
 
-    // MARK: Network Reachability Observer
+    // MARK: Refresh Collection View
 
+    @objc func refreshCollectionView() {
+        internetChanged()
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.reachabilityChanged, object: reachability)
+    }
+}
+
+// MARK: Network Reachability Observer
+
+extension ViewController {
     func addObserverForNetworkReachability() {
         NotificationCenter.default.addObserver(self, selector: #selector(internetChanged), name: Notification.Name.reachabilityChanged, object: reachability)
         do {
@@ -55,9 +64,11 @@ class ViewController: UIViewController {
             print("Could not strat notifier")
         }
     }
+}
 
-    // MARK:  Detect Network Change
+// MARK: Detect Network Change
 
+extension ViewController {
     @objc func internetChanged() {
         let reachability = Reachability()
         if reachability?.connection != .none {
@@ -77,31 +88,22 @@ class ViewController: UIViewController {
             }
         }
     }
+}
 
-    // MARK: Handle No Network UI
+// MARK: Handle No Network UI
 
+extension ViewController {
     func handleNoNetworkUI() {
-        showErrorDialogBox(on: self, with: "The Internet conenction appears to be offline")
+        self.showAlert(title: NetworkConnectionError.title, msg: NetworkConnectionError.networkConnection.rawValue)
         showAnimation(rootVC: self, shouldStartAnimation: false)
         self.refreshControl.endRefreshing()
         self.collectionView.reloadData()
     }
-
-    // MARK: Refresh Collection View
-
-    @objc func refreshCollectionView() {
-        internetChanged()
-    }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: Notification.Name.reachabilityChanged, object: reachability)
-    }
-
 }
 
-extension ViewController: DataCompletionDelegate, ErrorDelegate {
-    // MARK: Album Data Fetched
+// MARK: Album Data Fetched
 
+extension ViewController: DataCompletionDelegate, ErrorDelegate {
     func albumsDataFetched() {
         print("albumsDataFetched")
         showAnimation(rootVC: self, shouldStartAnimation: false)
@@ -115,17 +117,16 @@ extension ViewController: DataCompletionDelegate, ErrorDelegate {
         print("ErrorReceived")
         DispatchQueue.main.async {
             self.showAnimation(rootVC: self, shouldStartAnimation: false)
-            self.showErrorDialogBox(on: self, with: errMsg)
+            self.showAlert(title: "", msg: errMsg)
             self.refreshControl.endRefreshing()
             self.collectionView.reloadData()
         }
     }
 }
 
+// MARK: Search Delegate Methods
+
 extension ViewController: UISearchBarDelegate {
-
-    // MARK: Search Delegate Methods
-
     func searchBar(_: UISearchBar, textDidChange searchText: String) {
         if searchText.count > 0 {
             albumViewModel.filterAlbums(searchString: searchText)
@@ -156,10 +157,9 @@ extension ViewController: UISearchBarDelegate {
     }
 }
 
+// MARK: CollectionView Delegates
+
 extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-
-    // MARK: CollectionView Delegates
-
     func numberOfSectionsInCollectionView(collectionView _: UICollectionView) -> Int {
         return 1
     }

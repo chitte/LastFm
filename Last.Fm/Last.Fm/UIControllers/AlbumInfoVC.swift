@@ -2,6 +2,9 @@
 import UIKit
 
 class AlbumInfoVC: UIViewController {
+
+    // MARK: Properties
+
     var album: String?
     var artist: String?
 
@@ -38,6 +41,31 @@ class AlbumInfoVC: UIViewController {
         albumInfoViewModel.fetchAlbumInformation(artist: artist!, album: album!)
     }
 
+    @IBAction func wikiInfoAction(_: Any) {
+        navigationController?.navigationBar.isUserInteractionEnabled = false
+        wikiView.isHidden = false
+        textView.isHidden = false
+        wikiInfoBtn.isUserInteractionEnabled = false
+
+        let wikiInfo = albumInfoViewModel.getAlbumWikiInfo()
+        if let publishedText = wikiInfo?.published,
+            let summaryText = wikiInfo?.summary,
+            let content = wikiInfo?.content {
+            textView.text = "\nPublished: \(publishedText) \n\nSummary: \(summaryText) \n\nContent: \(content) \n"
+        } else {
+            textView.text = "Wiki Information Not Available"
+        }
+    }
+
+    @objc func buttonClicked() {
+        print("Button Clicked")
+        navigationController?.navigationBar.isUserInteractionEnabled = true
+        wikiView.isHidden = true
+        wikiInfoBtn.isUserInteractionEnabled = true
+    }
+}
+
+extension AlbumInfoVC {
     func setUpWikiView() {
         wikiView.frame = CGRect(x: 15, y: 100, width: screenWidth - 30, height: screenHeight - 130)
         wikiView.backgroundColor = UIColor.lightText
@@ -72,32 +100,6 @@ class AlbumInfoVC: UIViewController {
 
         wikiInfoBtn.isUserInteractionEnabled = true
     }
-
-    @IBAction func wikiInfoAction(_: Any) {
-        navigationController?.navigationBar.isUserInteractionEnabled = false
-        wikiView.isHidden = false
-        textView.isHidden = false
-
-        wikiInfoBtn.isUserInteractionEnabled = false
-
-        let wikiInfo = albumInfoViewModel.getAlbumWikiInfo()
-
-        if let publishedText = wikiInfo?.published,
-            let summaryText = wikiInfo?.summary,
-            let content = wikiInfo?.content {
-            textView.text = "\nPublished: \(publishedText) \n\nSummary: \(summaryText) \n\nContent: \(content) \n"
-        } else {
-            textView.text = "Wiki Information Not Available"
-        }
-
-    }
-
-    @objc func buttonClicked() {
-        print("Button Clicked")
-        navigationController?.navigationBar.isUserInteractionEnabled = true
-        wikiView.isHidden = true
-        wikiInfoBtn.isUserInteractionEnabled = true
-    }
 }
 
 extension AlbumInfoVC: InfoFetchDelegate, ErrorDelegate {
@@ -109,7 +111,7 @@ extension AlbumInfoVC: InfoFetchDelegate, ErrorDelegate {
         DispatchQueue.main.async {
             self.wikiInfoBtn.isUserInteractionEnabled = false
             self.showAnimation(rootVC: self, shouldStartAnimation: false)
-            self.showErrorDialogBox(on: self, with: errMsg)
+            self.showAlert(title: "", msg: errMsg)
         }
     }
 

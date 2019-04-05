@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		448091B5225333F50006C817 /* ServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448091B4225333F50006C817 /* ServiceError.swift */; };
+		44A10725225738B50082B00C /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A10724225738B50082B00C /* UIViewController+Extensions.swift */; };
 		44C6A195223A701C009F52BB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44C6A193223A701C009F52BB /* Main.storyboard */; };
 		44C6A197223A701D009F52BB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44C6A196223A701D009F52BB /* Assets.xcassets */; };
 		44C6A19A223A701D009F52BB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44C6A198223A701D009F52BB /* LaunchScreen.storyboard */; };
@@ -29,6 +30,7 @@
 
 /* Begin PBXFileReference section */
 		448091B4225333F50006C817 /* ServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceError.swift; sourceTree = "<group>"; };
+		44A10724225738B50082B00C /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		44C6A18C223A701C009F52BB /* Last.Fm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Last.Fm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		44C6A194223A701C009F52BB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		44C6A196223A701D009F52BB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 			isa = PBXGroup;
 			children = (
 				44C6A1C4223BC6B2009F52BB /* Extensions.swift */,
+				44A10724225738B50082B00C /* UIViewController+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -345,6 +348,7 @@
 				44C6A1C9223BC6D8009F52BB /* Protocols.swift in Sources */,
 				44C6A1BD223B7191009F52BB /* AlbumInfoViewModel.swift in Sources */,
 				44C6A1AE223A7CE0009F52BB /* Album.swift in Sources */,
+				44A10725225738B50082B00C /* UIViewController+Extensions.swift in Sources */,
 				44C6A1B9223B54B0009F52BB /* AlbumInfo.swift in Sources */,
 				448091B5225333F50006C817 /* ServiceError.swift in Sources */,
 				44F62B5A223CC734005EE217 /* Reachability.swift in Sources */,

@@ -88,19 +88,4 @@ extension UIViewController {
             }
         }
     }
-
-    func showErrorDialogBox(on rootVc: UIViewController, with errorMsg: String) {
-        let alertController = UIAlertController(title: "Error", message: errorMsg, preferredStyle: .alert)
-        let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alertController.addAction(alertAction)
-        rootVc.present(alertController, animated: true, completion: nil)
-    }
-
-//    func alert(message: String) -> UIAlertController {
-//        let alertController = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-//        let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-//        alertController.addAction(alertAction)
-//        return alertController
-//    }
-
 }
