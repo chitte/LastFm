@@ -26,10 +26,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        addObserverForNetworkReachability()
+
         navigationController?.setNavigationBarHidden(false, animated: true)
         collectionSearchBar.delegate = self
-        collectionView.dataSource = self
-        collectionView.delegate = self
 
         albumViewModel.dataDelegate = self
         albumViewModel.errDelegate = self
@@ -38,8 +38,6 @@ class ViewController: UIViewController {
 
         refreshControl.addTarget(self, action: #selector(refreshCollectionView), for: .valueChanged)
         collectionView.addSubview(refreshControl)
-
-        addObserverForNetworkReachability()
     }
 
     // MARK: Refresh Collection View

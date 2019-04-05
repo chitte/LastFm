@@ -16,7 +16,7 @@ class AlbumInfoViewModel {
 
         webService.fetchAlbums(resultInfoURL!) { (data: AlbumDetails?, error) in
             if error != nil {
-                self.errDelegate?.sendErrorInfoToUI(errMsg: (error?.localizedDescription)!)
+                self.errDelegate?.sendErrorInfoToUI(errMsg: (error)!.rawValue)
             } else {
                 self.albumInfoDetails = data
                 self.dataDelegate?.albumsInfoDataFetched()

@@ -1,10 +1,9 @@
 
 import Foundation
 
-enum ServiceError: String, Error {
+enum ServiceError: String {
     case networkError
     case jsonError
-
     case invalidService
     case InvalidMethod
     case authenticationFailed
@@ -23,7 +22,7 @@ enum ServiceError: String, Error {
     var rawValue: String {
         switch self {
         case .networkError:
-            return "You have made an invalid network request"
+            return "The Internet connection appears to be offline."
         case .jsonError:
             return "Error trying to convert data to json"
         case .invalidService:

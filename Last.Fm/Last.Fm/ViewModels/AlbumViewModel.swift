@@ -20,7 +20,7 @@ class AlbumViewModel {
     func fetchAlbumData() {
         webService.fetchAlbums(albumsSearchURL) { (data: Albums?, error) in
             if error != nil {
-                self.errDelegate?.sendErrorInfoToUI(errMsg: (error?.localizedDescription)!)
+                self.errDelegate?.sendErrorInfoToUI(errMsg: (error?.rawValue)!)
             } else {
                 self.albums = data
                 self.filteredAlbums = self.albums
