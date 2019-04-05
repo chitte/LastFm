@@ -96,4 +96,11 @@ extension UIViewController {
         rootVc.present(alertController, animated: true, completion: nil)
     }
 
+//    func alert(message: String) -> UIAlertController {
+//        let alertController = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+//        let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+//        alertController.addAction(alertAction)
+//        return alertController
+//    }
+
 }

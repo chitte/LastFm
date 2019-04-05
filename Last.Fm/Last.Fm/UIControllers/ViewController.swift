@@ -2,6 +2,8 @@
 
 import UIKit
 
+import Alamofire
+
 class ViewController: UIViewController {
 
     // MARK: Properties
@@ -25,6 +27,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         navigationController?.setNavigationBarHidden(false, animated: true)
         collectionSearchBar.delegate = self
         collectionView.dataSource = self
@@ -39,7 +42,7 @@ class ViewController: UIViewController {
         collectionView.addSubview(refreshControl)
 
         addObserverForNetworkReachability()
-        internetChanged()
+//        internetChanged()
     }
 
     // MARK: Network Reachability Observer

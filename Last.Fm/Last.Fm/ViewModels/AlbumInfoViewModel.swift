@@ -10,7 +10,11 @@ class AlbumInfoViewModel {
     var errDelegate: ErrorDelegate?
 
     func fetchAlbumInformation(artist: String, album: String) {
-        webService.getAlbumsInformation(artist: artist, album: album) { data, error in
+        let infoURL = "\(albumsBaseInfoURL)&artist=\(artist)&album=\(album)&format=json"
+        var resultInfoURL = infoURL.removingPercentEncoding
+        resultInfoURL = resultInfoURL?.replacingOccurrences(of: " ", with: "")
+
+        webService.fetchAlbums(resultInfoURL!) { (data: AlbumDetails?, error) in
             if error != nil {
                 self.errDelegate?.sendErrorInfoToUI(errMsg: (error?.localizedDescription)!)
             } else {

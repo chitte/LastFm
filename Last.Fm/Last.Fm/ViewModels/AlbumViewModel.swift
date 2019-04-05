@@ -18,7 +18,7 @@ class AlbumViewModel {
     var errDelegate: ErrorDelegate?
 
     func fetchAlbumData() {
-        webService.getAlbumsData { data, error in
+        webService.fetchAlbums(albumsSearchURL) { (data: Albums?, error) in
             if error != nil {
                 self.errDelegate?.sendErrorInfoToUI(errMsg: (error?.localizedDescription)!)
             } else {
